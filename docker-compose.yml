@@ -1,0 +1,46 @@
+version: '2'
+
+services:
+  mysql_server:
+    image: mysql:5.7
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'mysql'
+#    ports:
+#      - 3306
+    networks:
+      basic_network:
+        ipv4_address: 192.168.120.12
+  appli:
+    build: ./appli
+    hostname: appli
+    networks:
+      basic_network:
+        ipv4_address: 192.168.120.13
+    container_name: appli
+    ports:
+      - 3100:3000
+    environment:
+      - NODE_ENV=development
+    tty: true
+    volumes:
+      - ./appli:/root/appli
+    depends_on:
+      - mysql_server
+
+
+
+networks:
+  basic_network:
+      #    external: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 192.168.120.0/24
+        gateway: 192.168.120.1
+
+
+

@@ -1,0 +1,4 @@
+.idea
+appli/src/node_modules
+mysql_data/*
+!.gitkeep
